@@ -73,13 +73,6 @@ pub fn parse_markdown(
     out = out.replace("(&gt;", "(>");
     out = out.replace(" &gt; ", " > ");
 
-    // run plugins
-    let mut out = out.clone();
-
-    for plugin in plugins {
-        out = plugin(out)
-    }
-
     // only a little bit of regex-ing remains now
 
     // allowed elements
@@ -262,6 +255,13 @@ pub fn parse_markdown(
 
     out = regex_replace(&out, "(%3C)script(%3E)", ""); // iframe <script> in "data:" src
     out = regex_replace(&out, "(%3C)link", "");
+
+    // run plugins so they can modify the result however
+    let mut out = out.clone();
+
+    for plugin in plugins {
+        out = plugin(out)
+    }
 
     // return
     out
